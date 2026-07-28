@@ -26,23 +26,11 @@ void ili9341_init(ili9341_t *display, XSpi *Spi, XGpio *Gpio, u32 rst_mask, u32 
     initDisplay(display);
 } // ili9341_init
 
+// For Filling WHOLE Screen.
 void ili9341_fill_screen(ili9341_t *display, uint16_t colour)
 {
-    // Set to entire display
-    setAddressWindow(display, 0, 0, display->width - 1, display->height - 1);
-    setPinHi(display, display->dc_mask); // Data Mode
+    ili9341_fill_rect(display, 0, 0, display->width, display->height, colour);
 
-    int totalPixels = display->width * display->height;
-
-    u8 hi = colour >> 8;   // hi
-    u8 lo = colour & 0xFF; // low
-
-    for (int i = 0; i < totalPixels; i++)
-    {
-        // Everytime one pixel (2 bytes) is sent, the chip auto advances pointer to next pixel.
-        XSpi_Transfer(display->spi, &hi, NULL, 1);
-        XSpi_Transfer(display->spi, &lo, NULL, 1);
-    }
 } // ili9341_fill_screen
 
 void setPinHi(ili9341_t *display, u32 mask)
@@ -92,6 +80,23 @@ void setAddressWindow(ili9341_t *display, uint16_t x0, uint16_t y0, uint16_t x1,
     writeCommand(display, 0x2C); // Memory Write
 } // setAddressWindow
 
+void ili9341_fill_rect(ili9341_t *display, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t colour)
+{
+    setAddressWindow(display, x, y, x + w - 1, y + h - 1);
+    setPinHi(display, display->dc_mask); // Data Mode
+
+    int totalPixels = w * h;
+
+    u8 hi = colour >> 8;   // hi
+    u8 lo = colour & 0xFF; // low
+
+    for (int i = 0; i < totalPixels; i++)
+    {
+        XSpi_Transfer(display->spi, &hi, NULL, 1);
+        XSpi_Transfer(display->spi, &lo, NULL, 1);
+    }
+}
+// write pixel is to set colour wherever the address window is.
 void writePixel(ili9341_t *display, uint16_t colour)
 {
     setPinHi(display, display->dc_mask); // Data Mode
@@ -102,7 +107,12 @@ void writePixel(ili9341_t *display, uint16_t colour)
     XSpi_Transfer(display->spi, &hi, NULL, 1);
     XSpi_Transfer(display->spi, &lo, NULL, 1);
 } // writePixel
-
+// draw pixel draws at this coordinate.
+void drawPixel(ili9341_t *display, uint16_t x, uint16_t y, uint16_t colour)
+{
+    setAddressWindow(display, x, y, x, y); // Set to one pixel
+    writePixel(display, colour);
+}
 void ILI9341_reset(ili9341_t *display)
 {
     // Reset the display

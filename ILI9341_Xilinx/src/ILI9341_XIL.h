@@ -62,6 +62,7 @@ void ili9341_init(ili9341_t *display, XSpi *Spi, XGpio *Gpio, u32 rst_mask, u32 
 // Eventually Add the RGB Integer (0-255) to 16 bit colour handling
 
 void ili9341_fill_screen(ili9341_t *display, uint16_t colour);
+void ili9341_fill_rect(ili9341_t *display, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t colour);
 
 void setPinHi(ili9341_t *display, u32 mask);
 void setPinLo(ili9341_t *display, u32 mask);
@@ -72,7 +73,8 @@ void writeData(ili9341_t *display, uint8_t data);
 
 // Set drawing window. (Start:x0/y0, End:x1/y1)
 void setAddressWindow(ili9341_t *display, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-void writePixel(ili9341_t *display, uint16_t colour); // Sending a Colour to the address window.
-void initDisplay(ili9341_t *display);                 // Startup Sequence.
+void writePixel(ili9341_t *display, uint16_t colour);                        // Sending a Colour to the address window.
+void drawPixel(ili9341_t *display, uint16_t x, uint16_t y, uint16_t colour); // Draw one pixel of any colour
+void initDisplay(ili9341_t *display);                                        // Startup Sequence.
 
 #endif //_ILI9341_XIL_H_
