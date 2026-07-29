@@ -1,6 +1,4 @@
-# For now this repo only tracks the ILI9341 Xilinx driver source.
-# Everything else (Vitis workspace/build output, exported BSP/platform
-# files, IDE metadata, logs, bitstreams, caches) is ignored.
+
 *
 !*/
 
