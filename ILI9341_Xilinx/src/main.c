@@ -25,7 +25,8 @@ int main()
     
     //ili9341_fill_screen(&display, ILI9341_RED);
     //ili9341_fill_rect(&display, 0,0, 100, 250, ILI9341_CYAN);
-    drawPixel(&display, 160, 120, ILI9341_GREENYELLOW);
+    //drawPixel(&display, 160, 120, ILI9341_GREENYELLOW);
+    ili9341_drawChar(&display, 'C', 0, 0, ILI9341_DARKGREEN, 10, ILI9341_LIGHTGREY);
     while (1) {}
     return 0;
 }

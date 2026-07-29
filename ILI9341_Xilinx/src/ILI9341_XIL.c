@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "sleep.h"
 #include <stdlib.h>
+#include "55font.h"
 
 void ili9341_init(ili9341_t *display, XSpi *Spi, XGpio *Gpio, u32 rst_mask, u32 dc_mask, unsigned gpio_channel)
 {
@@ -37,6 +38,7 @@ void setPinHi(ili9341_t *display, u32 mask)
 {
     XGpio_DiscreteSet(display->gpio, display->gpio_channel, mask);
 }
+
 void setPinLo(ili9341_t *display, u32 mask)
 {
     XGpio_DiscreteClear(display->gpio, display->gpio_channel, mask);
@@ -96,6 +98,7 @@ void ili9341_fill_rect(ili9341_t *display, uint16_t x, uint16_t y, uint16_t w, u
         XSpi_Transfer(display->spi, &lo, NULL, 1);
     }
 }
+
 // write pixel is to set colour wherever the address window is.
 void writePixel(ili9341_t *display, uint16_t colour)
 {
@@ -107,13 +110,15 @@ void writePixel(ili9341_t *display, uint16_t colour)
     XSpi_Transfer(display->spi, &hi, NULL, 1);
     XSpi_Transfer(display->spi, &lo, NULL, 1);
 } // writePixel
+
 // draw pixel draws at this coordinate.
 void drawPixel(ili9341_t *display, uint16_t x, uint16_t y, uint16_t colour)
 {
     setAddressWindow(display, x, y, x, y); // Set to one pixel
     writePixel(display, colour);
 }
-void ILI9341_reset(ili9341_t *display)
+
+void ili9341_reset(ili9341_t *display)
 {
     // Reset the display
     setPinHi(display, display->rst_mask);
@@ -123,11 +128,12 @@ void ILI9341_reset(ili9341_t *display)
     setPinHi(display, display->rst_mask);
     usleep(150000); // 150ms
 }
+
 void initDisplay(ili9341_t *display)
 {
 
     // Need Hardware Reset + software reset before init.
-    ILI9341_reset(display);
+    ili9341_reset(display);
 
     writeCommand(display, 0x01); // Software Reset
     usleep(150000);              // 150ms
@@ -256,4 +262,49 @@ void initDisplay(ili9341_t *display)
 
     // TURN ON DISPLAY
     writeCommand(display, 0x29);
+}
+
+void ili9341_drawChar(ili9341_t *display, char character, uint8_t x, uint8_t y, uint16_t colour, uint8_t size, uint16_t bg)
+{
+    uint8_t func_char, i, j;
+
+    func_char = character;
+
+    if (func_char < ' ')
+    {
+        character = 0;
+    }
+    else
+    {
+        func_char -= 32; // Adjust to start of font table
+    }
+
+    char temp[CHAR_WIDTH];
+
+    for (uint8_t k = 0; k < CHAR_WIDTH; k++)
+    {
+        temp[k] = font[func_char][k]; // add char to temp array, 0 is space, a is 33, etc.
+    }
+
+    // drawing
+    ili9341_fill_rect(display, x, y, CHAR_WIDTH * size, CHAR_HEIGHT * size, bg); // background of the text
+
+    // going through pixels of character
+    for (j = 0; j < CHAR_WIDTH; j++)
+    {
+        for (i = 0; i < CHAR_HEIGHT; i++)
+        {
+            if (temp[j] & (1 << i)) // move 1 to bit position i and check if its turned on
+            {
+                if (size == 1)
+                {
+                    drawPixel(display, x + j, y + i, colour);
+                }
+                else
+                {
+                    ili9341_fill_rect(display, x + (j * size), y + (i * size), size, size, colour); // one pixel is bigger.
+                }
+            }
+        }
+    }
 }
