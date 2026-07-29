@@ -78,6 +78,6 @@ void drawPixel(ili9341_t *display, uint16_t x, uint16_t y, uint16_t colour); // 
 void initDisplay(ili9341_t *display);                                        // Startup Sequence.
 
 void ili9341_drawChar(ili9341_t *display, char character, uint8_t x, uint8_t y, uint16_t colour, uint8_t size, uint16_t bg);
-void ili9341_drawText(ili9341_t *display, const char *text, uint8_t x, uint8_t y, uint16_t colour, uint8_t size, uint16_t bg)
+void ili9341_drawText(ili9341_t *display, const char *text, uint8_t x, uint8_t y, uint16_t colour, uint8_t size, uint16_t bg);
 
 #endif //_ILI9341_XIL_H_

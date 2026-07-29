@@ -272,7 +272,7 @@ void ili9341_drawChar(ili9341_t *display, char character, uint8_t x, uint8_t y, 
 
     if (func_char < ' ')
     {
-        character = 0;
+        func_char = 0;
     }
     else
     {
@@ -306,5 +306,15 @@ void ili9341_drawChar(ili9341_t *display, char character, uint8_t x, uint8_t y, 
                 }
             }
         }
+    }
+}
+
+void ili9341_drawText(ili9341_t *display, const char *text, uint8_t x, uint8_t y, uint16_t colour, uint8_t size, uint16_t bg)
+{
+    while (*text) // pointer to current char
+    {
+        // loop thru all char
+        ili9341_drawChar(display, *text++, x, y, colour, size, bg);
+        x += CHAR_WIDTH * size;
     }
 }
