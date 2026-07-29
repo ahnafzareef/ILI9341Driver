@@ -28,7 +28,7 @@ int main()
     // ili9341_drawChar(&display, 'C', 0, 0, ILI9341_DARKGREEN, 10, ILI9341_LIGHTGREY);
     ili9341_drawText(&display, "Hello World", 0, 0, ILI9341_WHITE, 2, ILI9341_BLACK);
 
-    ili9341_drawText(&display, "bomboclat", 120, 120, ILI9341_WHITE, 2, ILI9341_BLACK);
+    ili9341_drawText(&display, "testing tesing", 120, 120, ILI9341_WHITE, 2, ILI9341_BLACK);
 
     while (1)
     {

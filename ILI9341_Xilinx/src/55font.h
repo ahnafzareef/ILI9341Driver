@@ -4,7 +4,6 @@
 #define CHAR_WIDTH 6
 #define CHAR_HEIGHT 8
 
-// Mystery font included in early Adafruit SSD1306 library.
 static const unsigned char font[96][6] = {
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, //
     {0x00, 0x00, 0x5F, 0x00, 0x00, 0x00}, // !
