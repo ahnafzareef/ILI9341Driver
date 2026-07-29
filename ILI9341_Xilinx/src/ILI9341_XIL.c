@@ -34,6 +34,29 @@ void ili9341_fill_screen(ili9341_t *display, uint16_t colour)
 
 } // ili9341_fill_screen
 
+void ili9341_drawImage(ili9341_t *display, uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *image)
+{
+    // RGB565 for ILI9341
+
+    setAddressWindow(display, x, y, x + w - 1, y + h - 1);
+    setPinHi(display, display->dc_mask); // Data Mode
+
+    // Send Image data
+    uint8_t buffer[ILI9341_WIDTH * 2]; // hold one row of image which is 2 byte per pixel
+    uint32_t count = 0;
+
+    for (uint16_t row = 0; row < h; row++)
+    {
+        uint16_t pixelCount = 0;
+        for (uint16_t col = 0; col < w; col++)
+        {
+            uint16_t colour = image[count++];     // one 16 bit pixel
+            buffer[pixelCount++] = colour >> 8;   // hi byte
+            buffer[pixelCount++] = colour & 0xFF; // lo byte
+        }
+        XSpi_Transfer(display->spi, buffer, NULL, pixelCount);
+    }
+}
 void setPinHi(ili9341_t *display, u32 mask)
 {
     XGpio_DiscreteSet(display->gpio, display->gpio_channel, mask);
@@ -262,6 +285,56 @@ void initDisplay(ili9341_t *display)
 
     // TURN ON DISPLAY
     writeCommand(display, 0x29);
+}
+
+void ili9341_setRotation(ili9341_t *display, uint8_t rotation)
+{
+#define MADCTL_MY 0x80
+#define MADCTL_MX 0x40
+#define MADCTL_MV 0x20
+#define MADCTL_ML 0x10
+// #define MADCTL_RGB 0x00
+#define MADCTL_BGR 0x08 // BGR for ILI9341
+#define MADCTL_MH 0x04
+
+    /* Rotation Mapping
+    0: 0 degrees (portrait)
+    1: 90 degrees (landscape)
+    2: 180 degrees (portrait)
+    3: 270 degrees (landscape)
+    */
+
+    writeCommand(display, 0x36); // Memory Access Control
+
+    switch (rotation)
+    {
+    case 0:
+        writeData(display, MADCTL_MX | MADCTL_BGR); // 1 + 0 + 0 + 0 + 0 + 1 + 0 = 0x48
+        display->width = ILI9341_WIDTH;
+        display->height = ILI9341_HEIGHT;
+        break;
+    case 1:
+        writeData(display, MADCTL_MV | MADCTL_BGR); // 0 + 0 + 1 + 0 + 0 + 1 + 0 = 0x28
+        display->width = ILI9341_HEIGHT;
+        display->height = ILI9341_WIDTH;
+        break;
+    case 2:
+        writeData(display, MADCTL_MY | MADCTL_BGR); // 1 + 1 + 0 + 0 + 0 + 1 + 0 = 0xC8
+        display->width = ILI9341_WIDTH;
+        display->height = ILI9341_HEIGHT;
+        break;
+    case 3:
+        writeData(display, MADCTL_MX | MADCTL_MV | MADCTL_BGR); // 1 + 0 + 1 + 0 + 0 + 1 + 0 = 0xE8
+        display->width = ILI9341_HEIGHT;
+        display->height = ILI9341_WIDTH;
+        break;
+    }
+} // setRotation
+
+// This Inverts Colour not flip.
+void ili9341_invertDisplay(ili9341_t *display, int invert)
+{
+    writeCommand(display, invert ? 0x21 : 0x20); // 0x21 = Invert On, 0x20 = Invert Off, DINVON and DINVOFF command
 }
 
 void ili9341_drawChar(ili9341_t *display, char character, uint8_t x, uint8_t y, uint16_t colour, uint8_t size, uint16_t bg)

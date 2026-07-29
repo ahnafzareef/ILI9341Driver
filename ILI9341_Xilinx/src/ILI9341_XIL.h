@@ -64,6 +64,8 @@ void ili9341_init(ili9341_t *display, XSpi *Spi, XGpio *Gpio, u32 rst_mask, u32 
 void ili9341_fill_screen(ili9341_t *display, uint16_t colour);
 void ili9341_fill_rect(ili9341_t *display, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t colour);
 
+void ili9341_drawImage(ili9341_t *display, uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *image);
+
 void setPinHi(ili9341_t *display, u32 mask);
 void setPinLo(ili9341_t *display, u32 mask);
 
@@ -76,7 +78,9 @@ void setAddressWindow(ili9341_t *display, uint16_t x0, uint16_t y0, uint16_t x1,
 void writePixel(ili9341_t *display, uint16_t colour);                        // Sending a Colour to the address window.
 void drawPixel(ili9341_t *display, uint16_t x, uint16_t y, uint16_t colour); // Draw one pixel of any colour
 void initDisplay(ili9341_t *display);                                        // Startup Sequence.
-
+void ili9341_setRotation(ili9341_t *display, uint8_t rotation);
+void ili9341_reset(ili9341_t *display);                     // Hardware Reset of Display
+void ili9341_invertDisplay(ili9341_t *display, int invert); // Invert Display On/Off 1 is on, 0 is off.
 void ili9341_drawChar(ili9341_t *display, char character, uint8_t x, uint8_t y, uint16_t colour, uint8_t size, uint16_t bg);
 void ili9341_drawText(ili9341_t *display, const char *text, uint8_t x, uint8_t y, uint16_t colour, uint8_t size, uint16_t bg);
 

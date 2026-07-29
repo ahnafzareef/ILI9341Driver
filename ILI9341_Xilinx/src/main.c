@@ -1,6 +1,6 @@
 #include "ILI9341_XIL.h"
 #include "xparameters.h"
-
+#include "pikachu.h"
 XSpi Spi;
 XGpio Gpio;
 
@@ -28,10 +28,13 @@ int main()
     // ili9341_drawChar(&display, 'C', 0, 0, ILI9341_DARKGREEN, 10, ILI9341_LIGHTGREY);
     ili9341_drawText(&display, "Hello World", 0, 0, ILI9341_WHITE, 2, ILI9341_BLACK);
 
+    ili9341_setRotation(&display, 2);
+
     ili9341_drawText(&display, "testing tesing", 120, 120, ILI9341_WHITE, 2, ILI9341_BLACK);
 
-    while (1)
-    {
-    }
+    ili9341_drawImage(&display, 10, 10, PIKACHU_WIDTH, PIKACHU_HEIGHT, pikachu);
+
+    ili9341_invertDisplay(&display, 1);
+    while (1) {}
     return 0;
 }
