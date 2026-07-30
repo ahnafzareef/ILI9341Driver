@@ -2,7 +2,7 @@
 
 Hello! This is a minimal **C Driver Library** for the **2.8 inch ILI9341 SPI TFT display**. I made this project because I was in the midst of working on a RTL project incorporating Chess Minimax algorithm logic to make a chess trainer. But unfortunately there was no existing libraries or support for this display, in addition to this, on the ARTY S7-25, using Microblaze with DDR3 and Caching enabled for both I-Cache and D-Cache caused too large of a memory footprint. So this runs entirely on BRAM. It is also plain C, so its small.
 
-***Tested with the ARTY S7-25. Check `xparameters.h` in vitis to change necessary registers and masks for your device. 
+### Tested with the ARTY S7-25. Check `xparameters.h` in vitis to change necessary registers and masks for your device. 
 
 ## Video Demo
 
