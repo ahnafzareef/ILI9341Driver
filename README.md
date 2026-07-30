@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/aa67fadb-3793-4b63-9e01-7f91522441fb
 - **Text:** built-in 5x5 font, `ili9341_drawChar`, `ili9341_drawText` with scaling and also background colours!
 - **Images:** `draw_image` for RGB565 bitmaps, if you want to use this please generate your own RGB565 bitmap just as I did my pikachu!
 -  **Touch (Optional):** Fully optional module, XPT2046 read, IRQ based touch detection, sampling + averaging + calibration.
--  **BRAM-only: ** ALL BRAM, no DDR needed!
+-  **BRAM-only:** ALL BRAM, no DDR needed!
 
 ## Hardware
 
