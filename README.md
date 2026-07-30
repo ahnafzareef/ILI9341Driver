@@ -17,7 +17,7 @@ Hello! This is a minimal **C Driver Library** for the **2.8 inch ILI9341 SPI TFT
 
 Maybe it'll help you to see the SOC I used to set this up, below are the images:
 
-![Uploading image.png…]()
+<img width="2555" height="1054" alt="image" src="https://github.com/user-attachments/assets/58647950-fceb-49a6-8157-c2595521c41c" />
 
 This library drives the display through the standard Xilinx IP, the reference block design is:
 
@@ -31,7 +31,9 @@ This library drives the display through the standard Xilinx IP, the reference bl
 
 It'll also maybe help you to see the pin diagram, below is the image:
 
+
 <img width="1176" height="1381" alt="image" src="https://github.com/user-attachments/assets/7ec589c4-20ae-45bd-b285-77ca1963397f" />
+
 
 
 | Signal | Connects to | Notes |
