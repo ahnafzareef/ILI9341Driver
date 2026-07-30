@@ -5,6 +5,8 @@ Hello! This is a minimal **C Driver Library** for the **2.8 inch ILI9341 SPI TFT
 
 ## Video Demo
 
+https://github.com/user-attachments/assets/aa67fadb-3793-4b63-9e01-7f91522441fb
+
 ## Features
 - **Display:** hardware + software reset, full ILI9341 init sequence with RGB565 (16-bit per 2 Bytes) colour. If you're looking to adapt to a ILI9488 there are existing libraries or simply change the logic for RGB888 and change the initialization sequence.
 - **Drawing:** `ili9341_fill_screen`, `ili9341_fill_rect`, `writePixel`, `drawPixel`, `ili9341_setRotation` (4 Orientations)
