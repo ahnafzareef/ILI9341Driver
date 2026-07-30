@@ -39,17 +39,14 @@ int main()
     ili9341_drawImage(&display, 10, 10, PIKACHU_WIDTH, PIKACHU_HEIGHT, pikachu);
 
     ili9341_setRotation(&display, 0);
-    uint16_t tx, ty;
+
     uint16_t px, py;
+    
     while (1)
     {
         if (xpt2046_readPointCalibrated(&touch, &px, &py))
         {
-            //drawPixel(&display, px, py, ILI9341_RED);
-            ili9341_fill_rect(&display, px, py, 5, 5, ILI9341_CYAN);
-            if (xpt2046_readPoint(&touch, &tx, &ty)) {
-            xil_printf("Touch: x=%d y=%d\r\n", tx, ty);
-            }   
+            ili9341_fill_rect(&display, px, py, 5, 5,ILI9341_CYAN);
         }
         usleep(10000);
     }

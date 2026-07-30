@@ -7,6 +7,11 @@
 #include <stdint.h>
 #include <xil_types.h>
 
+#define X_MIN 290
+#define X_MAX 4000
+#define Y_MIN 380
+#define Y_MAX 4000
+
 typedef struct
 {
     XSpi *spi;            // shared SPI bus (same as display)

@@ -4,11 +4,6 @@
 #include "sleep.h"
 #include <stdlib.h>
 
-#define X_MIN 290
-#define X_MAX 4000
-#define Y_MIN 380
-#define Y_MAX 4000
-
 void xpt2046_init(xpt2046_t *touch, XSpi *spi, XGpio *gpio, unsigned cs_channel, u32 cs_mask, u32 irq_mask, unsigned irq_channel)
 {
     touch->spi = spi;
@@ -36,16 +31,19 @@ uint16_t xpt2046_readAxis(xpt2046_t *touch, uint8_t command)
     XGpio_DiscreteClear(touch->gpio, touch->cs_channel, touch->cs_mask);
     // 12 bit ADC, 8 bit on SPI, so: cmd, empty, empty
 
-    uint8_t tx[3] = {command, 0x00, 0x00};
-    uint8_t rx[3] = {0};
+    uint32_t total = 0;
+    int samples = 16; // sampling and avg
 
-    XSpi_Transfer(touch->spi, tx, rx, 3);
-    xil_printf("rx: %02x %02x %02x\r\n", rx[0], rx[1], rx[2]);
-
+    for (int i = 0; i < samples; i++)
+    {
+        uint8_t tx[3] = {command, 0x00, 0x00};
+        uint8_t rx[3] = {0};
+        XSpi_Transfer(touch->spi, tx, rx, 3);
+        total += ((rx[1] << 8) | rx[2]) >> 3; // 12 bit
+    }
     // the first spi transfer MISO nothing, only at second and third rx does it mixo lo and hi of the 12 bit number
     XGpio_DiscreteSet(touch->gpio, touch->cs_channel, touch->cs_mask); // Pull CS high to deselect the touch controller.
-
-    return ((rx[1] << 8) | rx[2]) >> 3;
+    return total / samples;                                            // average
 }
 
 int xpt2046_readPointCalibrated(xpt2046_t *touch, uint16_t *x, uint16_t *y)
@@ -66,8 +64,8 @@ int xpt2046_readPointCalibrated(xpt2046_t *touch, uint16_t *x, uint16_t *y)
     if (py >= ILI9341_HEIGHT)
         py = ILI9341_HEIGHT - 1;
 
-    *x = px;
-    *y = py;
+    *x = (uint16_t)px;
+    *y = (uint16_t)py;
     return 1;
 }
 
