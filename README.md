@@ -73,3 +73,7 @@ set_property -dict { PACKAGE_PIN U11   IOSTANDARD LVCMOS33 } [get_ports { io10_i
 ### 1. Build platform on Vitis
 ### 2. Add all the files from `src/` into your Vitis Application
 ### 3. Build and run!
+
+
+## Next Steps for me
+I am working towards making this an IP on Vivado so I can easily use it in my project. Personally I love visual cues in any project I make so this is super important to me! Maybe it'll influence me to create more cool looking stuff, and maybe you aswell.
