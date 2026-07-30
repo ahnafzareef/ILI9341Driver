@@ -28,31 +28,42 @@ int main()
     xpt2046_t touch;
     xpt2046_init(&touch, &Spi, &Gpio, 1, 0x04, 0x01, 2);
 
-    // ili9341_fill_screen(&display, ILI9341_RED);
-    // ili9341_fill_rect(&display, 0,0, 100, 250, ILI9341_CYAN);
-    // drawPixel(&display, 160, 120, ILI9341_GREENYELLOW);
-    // ili9341_drawChar(&display, 'C', 0, 0, ILI9341_DARKGREEN, 10, ILI9341_LIGHTGREY);
-    // ili9341_drawText(&display, "Hello World", 0, 0, ILI9341_WHITE, 2, ILI9341_BLACK);
+    // ---- Title ----
+    ili9341_drawText(&display, "Ahnaf Zareef", 6, 6, ILI9341_CYAN, 2, ILI9341_BLACK);
+    ili9341_drawText(&display, "ILI9341 Driver Library", 6, 28, ILI9341_WHITE, 1, ILI9341_BLACK);
 
-    // ili9341_drawText(&display, "testing tesing", 120, 120, ILI9341_WHITE, 2, ILI9341_BLACK);
+    // ---- Two Pikachus: normal + inverted colours ----
+    static uint16_t pikachu_inv[PIKACHU_WIDTH * PIKACHU_HEIGHT];
+    for (int i = 0; i < PIKACHU_WIDTH * PIKACHU_HEIGHT; i++)
+        pikachu_inv[i] = ~pikachu[i];
 
-    ili9341_drawImage(&display, 10, 10, PIKACHU_WIDTH, PIKACHU_HEIGHT, pikachu);
+    ili9341_drawImage(&display, 20, 50, PIKACHU_WIDTH, PIKACHU_HEIGHT, pikachu);
+    ili9341_drawImage(&display, 130, 50, PIKACHU_WIDTH, PIKACHU_HEIGHT, pikachu_inv);
 
-    ili9341_setRotation(&display, 0);
+    // ---- Row of different-sized rectangles ----
+    ili9341_fill_rect(&display, 10, 115, 20, 20, ILI9341_RED);
+    ili9341_fill_rect(&display, 40, 115, 30, 30, ILI9341_GREEN);
+    ili9341_fill_rect(&display, 80, 115, 40, 40, ILI9341_BLUE);
+    ili9341_fill_rect(&display, 130, 115, 50, 50, ILI9341_YELLOW);
+    ili9341_fill_rect(&display, 190, 115, 40, 40, ILI9341_MAGENTA);
 
+    // ---- Touch region label + box (bottom half) ----
+    ili9341_drawText(&display, "Touch below to draw:", 6, 180, ILI9341_WHITE, 1, ILI9341_BLACK);
+    ili9341_fill_rect(&display, 0, 195, ILI9341_WIDTH, ILI9341_HEIGHT - 195, ILI9341_DARKGREY);
+
+    // ---- Live touch loop ----
     uint16_t px, py;
-    
     while (1)
     {
         if (xpt2046_readPointCalibrated(&touch, &px, &py))
         {
-            ili9341_fill_rect(&display, px, py, 5, 5,ILI9341_CYAN);
+            if (py >= 195)
+            { // only inside the draw box
+                ili9341_fill_rect(&display, px, py, 4, 4, ILI9341_CYAN);
+            }
         }
-        usleep(10000);
+        usleep(5000);
     }
 
-    while (1)
-    {
-    }
     return 0;
 }
