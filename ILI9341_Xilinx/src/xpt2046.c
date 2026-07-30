@@ -4,10 +4,10 @@
 #include "sleep.h"
 #include <stdlib.h>
 
-#define X_MIN 424
-#define X_MAX 3072
-#define Y_MIN 472
-#define Y_MAX 3200
+#define X_MIN 290
+#define X_MAX 4000
+#define Y_MIN 380
+#define Y_MAX 4000
 
 void xpt2046_init(xpt2046_t *touch, XSpi *spi, XGpio *gpio, unsigned cs_channel, u32 cs_mask, u32 irq_mask, unsigned irq_channel)
 {
